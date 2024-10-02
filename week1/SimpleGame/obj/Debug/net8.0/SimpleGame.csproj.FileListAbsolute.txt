@@ -1,0 +1,15 @@
+C:\training\Yongkon\week1\SimpleGame\bin\Debug\net8.0\SimpleGame.exe
+C:\training\Yongkon\week1\SimpleGame\bin\Debug\net8.0\SimpleGame.deps.json
+C:\training\Yongkon\week1\SimpleGame\bin\Debug\net8.0\SimpleGame.runtimeconfig.json
+C:\training\Yongkon\week1\SimpleGame\bin\Debug\net8.0\SimpleGame.dll
+C:\training\Yongkon\week1\SimpleGame\bin\Debug\net8.0\SimpleGame.pdb
+C:\training\Yongkon\week1\SimpleGame\obj\Debug\net8.0\SimpleGame.GeneratedMSBuildEditorConfig.editorconfig
+C:\training\Yongkon\week1\SimpleGame\obj\Debug\net8.0\SimpleGame.AssemblyInfoInputs.cache
+C:\training\Yongkon\week1\SimpleGame\obj\Debug\net8.0\SimpleGame.AssemblyInfo.cs
+C:\training\Yongkon\week1\SimpleGame\obj\Debug\net8.0\SimpleGame.csproj.CoreCompileInputs.cache
+C:\training\Yongkon\week1\SimpleGame\obj\Debug\net8.0\SimpleGame.sourcelink.json
+C:\training\Yongkon\week1\SimpleGame\obj\Debug\net8.0\SimpleGame.dll
+C:\training\Yongkon\week1\SimpleGame\obj\Debug\net8.0\refint\SimpleGame.dll
+C:\training\Yongkon\week1\SimpleGame\obj\Debug\net8.0\SimpleGame.pdb
+C:\training\Yongkon\week1\SimpleGame\obj\Debug\net8.0\SimpleGame.genruntimeconfig.cache
+C:\training\Yongkon\week1\SimpleGame\obj\Debug\net8.0\ref\SimpleGame.dll
