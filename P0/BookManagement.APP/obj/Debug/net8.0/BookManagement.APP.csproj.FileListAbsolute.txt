@@ -1,0 +1,15 @@
+D:\99. Revature\GitHub\My Repository\Yongkon\P0\BookManagement.APP\bin\Debug\net8.0\BookManagement.APP.exe
+D:\99. Revature\GitHub\My Repository\Yongkon\P0\BookManagement.APP\bin\Debug\net8.0\BookManagement.APP.deps.json
+D:\99. Revature\GitHub\My Repository\Yongkon\P0\BookManagement.APP\bin\Debug\net8.0\BookManagement.APP.runtimeconfig.json
+D:\99. Revature\GitHub\My Repository\Yongkon\P0\BookManagement.APP\bin\Debug\net8.0\BookManagement.APP.dll
+D:\99. Revature\GitHub\My Repository\Yongkon\P0\BookManagement.APP\bin\Debug\net8.0\BookManagement.APP.pdb
+D:\99. Revature\GitHub\My Repository\Yongkon\P0\BookManagement.APP\obj\Debug\net8.0\BookManagement.APP.GeneratedMSBuildEditorConfig.editorconfig
+D:\99. Revature\GitHub\My Repository\Yongkon\P0\BookManagement.APP\obj\Debug\net8.0\BookManagement.APP.AssemblyInfoInputs.cache
+D:\99. Revature\GitHub\My Repository\Yongkon\P0\BookManagement.APP\obj\Debug\net8.0\BookManagement.APP.AssemblyInfo.cs
+D:\99. Revature\GitHub\My Repository\Yongkon\P0\BookManagement.APP\obj\Debug\net8.0\BookManagement.APP.csproj.CoreCompileInputs.cache
+D:\99. Revature\GitHub\My Repository\Yongkon\P0\BookManagement.APP\obj\Debug\net8.0\BookManagement.APP.sourcelink.json
+D:\99. Revature\GitHub\My Repository\Yongkon\P0\BookManagement.APP\obj\Debug\net8.0\BookManagement.APP.dll
+D:\99. Revature\GitHub\My Repository\Yongkon\P0\BookManagement.APP\obj\Debug\net8.0\refint\BookManagement.APP.dll
+D:\99. Revature\GitHub\My Repository\Yongkon\P0\BookManagement.APP\obj\Debug\net8.0\BookManagement.APP.pdb
+D:\99. Revature\GitHub\My Repository\Yongkon\P0\BookManagement.APP\obj\Debug\net8.0\BookManagement.APP.genruntimeconfig.cache
+D:\99. Revature\GitHub\My Repository\Yongkon\P0\BookManagement.APP\obj\Debug\net8.0\ref\BookManagement.APP.dll
