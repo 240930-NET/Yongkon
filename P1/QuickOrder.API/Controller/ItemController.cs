@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using QuickOrder.API.DTO;
 using QuickOrder.API.Model;
 using QuickOrder.API.Service;
 
@@ -37,22 +38,22 @@ public class ItemController : ControllerBase
     }
 
   [HttpPost("/item/addNewItem")]
-    public IActionResult AddNewItem([FromBody] Item item){
-
+    public IActionResult AddNewItem([FromBody] ItemDTO itemDTO){
+        
         try{
-            _itemService.AddItem(item);
-            return Ok(item);
+            _itemService.AddItem(itemDTO);
+            return Ok(itemDTO);
         }
         catch(Exception e){
-            return BadRequest("Could not add item " +e.Message);
+            return BadRequest("Could not add item " + e.Message);
         }
     }
 
     [HttpPut("/itme/updateItem")]
-    public IActionResult EditItem([FromBody] Item item){
+    public IActionResult EditItem([FromBody] UpdateItemDTO updateItemDTO){
         try{
-            _itemService.UpdateItem(item);
-            return Ok(item);
+            _itemService.UpdateItem(updateItemDTO);
+            return Ok(updateItemDTO);
         }
         catch(Exception e){
             return BadRequest("Could not update item "+ e.Message);

@@ -1,3 +1,5 @@
+using AutoMapper;
+using QuickOrder.API.DTO;
 using QuickOrder.API.Model;
 using QuickOrder.API.Repository;
 
@@ -6,8 +8,12 @@ namespace QuickOrder.API.Service;
 public class ItemService : IItemService 
 {
     private readonly IItemRepository _itemRepository;
+    private readonly IMapper _mapper;
 
-    public ItemService(IItemRepository itemRepository) => _itemRepository = itemRepository;
+    public ItemService(IItemRepository itemRepository, IMapper mapper) {
+        _itemRepository = itemRepository;
+        _mapper = mapper;
+    }
 
     public IEnumerable<Item> GetAllItems() 
     {
@@ -30,9 +36,11 @@ public class ItemService : IItemService
         }
     }
 
-    public string AddItem(Item item) 
+    public string AddItem(ItemDTO itemDTO) 
     {
-        if (item.Name != null && item.Price > 0) 
+        var item = _mapper.Map<Item>(itemDTO);
+
+        if (itemDTO.Name != null && itemDTO.Price > 0) 
         {
             _itemRepository.AddItem(item);
             return $"Item {item.Name} added successfully!";
@@ -41,8 +49,10 @@ public class ItemService : IItemService
         }
     }
 
-    public Item UpdateItem(Item item)
+    public Item UpdateItem(UpdateItemDTO updateItemDTO)
     {
+        var item = _mapper.Map<Item>(updateItemDTO);
+        
         Item searchedItem = _itemRepository.GetItemById(item.Id);
         if (searchedItem != null) 
         {

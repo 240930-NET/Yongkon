@@ -85,7 +85,11 @@ public class OrderServiceTest
         ];
 
         mockOrderRepo.Setup(repo => repo.GetOrderById(It.IsAny<int>()))
-              .Returns(orderList.FirstOrDefault(order => order.Id == id));
+              .Returns(() => {
+            var order = orderList.FirstOrDefault(order => order.Id == id);           
+            if (order != null) return order;
+            else throw new Exception("not found");
+        });
 
         //Act
         var order = orderService.GetOrderById(id);

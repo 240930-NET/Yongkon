@@ -1,3 +1,4 @@
+using QuickOrder.API.DTO;
 using QuickOrder.API.Model;
 
 namespace QuickOrder.API.Service;
@@ -9,9 +10,9 @@ public interface IItemService
     public Item GetItemById(int id);
 
 
-    public string AddItem(Item item);
+    public string AddItem(ItemDTO itemDTO);
 
-    public Item UpdateItem(Item item);
+    public Item UpdateItem(UpdateItemDTO updateItemDTO);
 
     public string DeleteItem(int id);
 }

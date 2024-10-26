@@ -6,9 +6,9 @@ public class Order
 {
     public int Id {get; set;}
 
-    public DateTime Date {get; set;} = DateTime.MinValue;
+    public DateTime Date {get; set;}
     
-    public Boolean Completed {get; set;}
+    public Boolean Completed {get; set;} = false;
 
     [JsonIgnore]
     public ICollection<OrderItem> OrderItems {get; set;}  = new List<OrderItem>();

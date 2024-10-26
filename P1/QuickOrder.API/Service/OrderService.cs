@@ -63,7 +63,6 @@ public class OrderService : IOrderService
             if (!searchedOrder.Completed)
             {
                 // Update order as completed
-                searchedOrder.Date = order.Date;
                 searchedOrder.Completed = order.Completed;
 
                 _orderRepository.UpdateOrder(searchedOrder);

@@ -1,3 +1,8 @@
 # Bin & Obj
 Bin/
 Obj/
+coveragereport/
+TestResults/
+
+
+.fake

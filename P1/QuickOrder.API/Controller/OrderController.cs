@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using QuickOrder.API.Model;
 using QuickOrder.API.Service;
@@ -11,11 +12,13 @@ public class OrderController : ControllerBase
 {
     private readonly IOrderService _orderService;
     private readonly IItemService _itemService;
+    private readonly IMapper _imapper;
 
-    public OrderController(IOrderService orderService, IItemService itemService) 
+    public OrderController(IOrderService orderService, IItemService itemService, IMapper imapper) 
     {
          _orderService = orderService;
          _itemService = itemService;
+         _imapper = imapper;
     }
 
     [HttpGet("/order")]
@@ -48,8 +51,9 @@ public class OrderController : ControllerBase
   
     // Order Create
     [HttpPost("/order/addNewOrder")]
-    public IActionResult AddOrder([FromBody] Order order){
+    public IActionResult AddOrder([FromBody] OrderDTO orderDTO){
 
+        var order = _imapper.Map<Order>(orderDTO);
         try{
             _orderService.AddOrder(order);
             return Ok(order);
@@ -60,7 +64,8 @@ public class OrderController : ControllerBase
     }
 
     [HttpPut("/order/updateOrder")]
-    public IActionResult UpdateOrder([FromBody] Order order){
+    public IActionResult UpdateOrder([FromBody] UpdateOrderDTO updateOrderDTO){
+        var order = _imapper.Map<Order>(updateOrderDTO);
         try{
             _orderService.UpdateOrder(order);
             return Ok(order);

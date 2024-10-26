@@ -3,10 +3,14 @@ using QuickOrder.API.Data;
 using QuickOrder.API.Repository;
 using QuickOrder.API.Service;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+// AutoMapper
+builder.Services.AddAutoMapper(typeof(Program));
 
 // Add DBContext and Services dependencies
 builder.Services.AddDbContext<OrderContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Order")));

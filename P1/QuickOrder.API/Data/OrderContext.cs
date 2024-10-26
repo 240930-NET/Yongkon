@@ -14,6 +14,17 @@ public partial class OrderContext : DbContext
     public virtual DbSet<Item> Items {get; set;}
     public virtual DbSet<OrderItem> OrderItems {get; set;}
 
+    public override int SaveChanges()
+    {
+        foreach (var entry in ChangeTracker.Entries<Order>())
+        {
+            if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
+            {
+                entry.Entity.Date = DateTime.Now;
+            }
+        }
+        return base.SaveChanges();
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
