@@ -13,7 +13,7 @@ public class ItemDTO {
 public class UpdateItemDTO {
     public int Id {get; set;}
 
-    public string Name {get; set;}
+    public required string  Name {get; set;}
 
     public double Price {get; set;}
 }

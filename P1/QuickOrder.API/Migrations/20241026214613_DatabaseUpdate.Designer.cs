@@ -12,8 +12,8 @@ using QuickOrder.API.Data;
 namespace QuickOrder.API.Migrations
 {
     [DbContext(typeof(OrderContext))]
-    [Migration("20241025132112_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241026214613_DatabaseUpdate")]
+    partial class DatabaseUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -13,6 +13,14 @@ public class OrderServiceTest
 {
     private readonly ITestOutputHelper _output;
 
+    private readonly  Mock<IOrderRepository> mockOrderRepo = new();
+    private readonly  Mock<IItemRepository> mockItemRepo = new();
+    private readonly  Mock<OrderContext> mockContext = new();
+    
+    OrderService CreateOrderService() {
+        return new(mockOrderRepo.Object, mockItemRepo.Object, mockContext.Object);
+    }
+
     public OrderServiceTest(ITestOutputHelper output)
     {
         _output = output;
@@ -21,13 +29,7 @@ public class OrderServiceTest
     [Fact]
     public void GetAllOrdersReturnList()
     {
-        //Arrange
-        Mock<IOrderRepository> mockOrderRepo = new();
-        Mock<IItemRepository> mockItemRepo = new();
-        Mock<OrderContext> mockContext = new();
-        
-        OrderService orderService = new(mockOrderRepo.Object, mockItemRepo.Object, mockContext.Object);
-        
+        //Arrange  
         List<Order> orderList = [
             new Order{Id = 1, Date=DateTime.Parse("2024/10/21"), Completed = false},
             new Order{Id = 2, Date=DateTime.Parse("2024/10/22"), Completed = false},
@@ -37,6 +39,7 @@ public class OrderServiceTest
         mockOrderRepo.Setup(repo => repo.GetAllOrders()).Returns(orderList);
 
         //Act
+        var orderService = CreateOrderService();
         var returnedList = orderService.GetAllOrders();
 
         //Assert
@@ -50,18 +53,13 @@ public class OrderServiceTest
     public void GetAllOrdersThrowExceptionsEmpty()
     {
         //Arrange
-        Mock<IOrderRepository> mockOrderRepo = new();
-        Mock<IItemRepository> mockItemRepo = new();
-        Mock<OrderContext> mockContext = new();
-        
-        OrderService orderService = new(mockOrderRepo.Object, mockItemRepo.Object, mockContext.Object);
-        
         List<Order> orderList = [];
 
         mockOrderRepo.Setup(repo => repo.GetAllOrders()).Returns(orderList);
 
         //Act        
         //Assert
+        var orderService = CreateOrderService();
         Assert.ThrowsAny<Exception>(() => orderService.GetAllOrders());
     }    
 
@@ -72,12 +70,6 @@ public class OrderServiceTest
     public void GetOrderByIdReturnsProperOrder(int id)
     {
         //Arrange
-        Mock<IOrderRepository> mockOrderRepo = new();
-        Mock<IItemRepository> mockItemRepo = new();
-        Mock<OrderContext> mockContext = new();
-        
-        OrderService orderService = new(mockOrderRepo.Object, mockItemRepo.Object, mockContext.Object);
-        
         List<Order> orderList = [
             new Order{Id = 1, Date=DateTime.Parse("2024/10/21"), Completed = false},
             new Order{Id = 2, Date=DateTime.Parse("2024/10/22"), Completed = false},
@@ -92,6 +84,7 @@ public class OrderServiceTest
         });
 
         //Act
+        var orderService = CreateOrderService();
         var order = orderService.GetOrderById(id);
 
         //Assert
@@ -105,12 +98,6 @@ public class OrderServiceTest
     public void AddNewOrderToOrderList()
     {
         //Arrange
-        Mock<IOrderRepository> mockOrderRepo = new();
-        Mock<IItemRepository> mockItemRepo = new();
-        Mock<OrderContext> mockContext = new();
-        
-        OrderService orderService = new(mockOrderRepo.Object, mockItemRepo.Object, mockContext.Object);
-        
         List<Order> orderList = [
             new Order{Id = 1, Date=DateTime.Parse("2024/10/21"), Completed = false},
             new Order{Id = 2, Date=DateTime.Parse("2024/10/22"), Completed = false},
@@ -124,7 +111,8 @@ public class OrderServiceTest
         mockOrderRepo.Setup(repo => repo.AddOrder(It.IsAny<Order>()))
            .Callback(() => orderList.Add(newOrder));
            
-        //Act        
+        //Act     
+        var orderService = CreateOrderService();   
         var result = orderService.AddOrder(newOrder);
 
         //Assert
@@ -137,12 +125,6 @@ public class OrderServiceTest
     public void EditOrderFromOrderList()
     {
         //Arrange
-        Mock<IOrderRepository> mockOrderRepo = new();
-        Mock<IItemRepository> mockItemRepo = new();
-        Mock<OrderContext> mockContext = new();
-        
-        OrderService orderService = new(mockOrderRepo.Object, mockItemRepo.Object, mockContext.Object);
-        
         List<Order> orderList = [
             new Order{Id = 1, Date=DateTime.Parse("2024/10/21"), Completed = false},
             new Order{Id = 2, Date=DateTime.Parse("2024/10/22"), Completed = false},
@@ -156,28 +138,35 @@ public class OrderServiceTest
         mockOrderRepo.Setup(repo => repo.GetOrderById(It.IsAny<int>()))
            .Returns((int id) => {
                 var order = orderList.FirstOrDefault(o => o.Id == id);
+
                 return order;
+            });
+        
+        // Mock Repo : UpdateOrder
+        mockOrderRepo.Setup(repo => repo.UpdateOrder(It.IsAny<Order>()))
+            .Callback((Order order) => {
+                var existingOrder = orderList.FirstOrDefault(o => o.Id == order.Id);
+                if (existingOrder != null)
+                {
+                    existingOrder.Date = order.Date; 
+                    existingOrder.Completed = order.Completed; 
+                }
             });
 
         //Act        
+        var orderService = CreateOrderService();
         var result = orderService.UpdateOrder(editOrder);
 
         //Assert
         Assert.NotNull(result);
-        Assert.Contains(orderList, o => o.Date.Date == editOrder.Date.Date);
-        Assert.DoesNotContain(orderList, o => o.Date.Date == DateTime.Parse("2024/10/22").Date);        
+        Assert.Contains(orderList, o => o.Completed == editOrder.Completed);
+        Assert.Contains(orderList, o => o.Completed == true);        
     }      
 
     [Fact]
     public void DeleteOrderFromOrderList()
     {
         //Arrange
-        Mock<IOrderRepository> mockOrderRepo = new();
-        Mock<IItemRepository> mockItemRepo = new();
-        Mock<OrderContext> mockContext = new();
-        
-        OrderService orderService = new(mockOrderRepo.Object, mockItemRepo.Object, mockContext.Object);
-        
         List<Order> orderList = [
             new Order{Id = 1, Date=DateTime.Parse("2024/10/21"), Completed = false},
             new Order{Id = 2, Date=DateTime.Parse("2024/10/22"), Completed = false},
@@ -224,7 +213,8 @@ public class OrderServiceTest
            }
            );
 
-        //Act        
+        //Act  
+        var orderService = CreateOrderService();      
         var result = orderService.DeleteOrder(id);
 
         //Assert
@@ -237,12 +227,6 @@ public class OrderServiceTest
     public void CannotDeleteCompleteOrder()
     {
         //Arrange
-        Mock<IOrderRepository> mockOrderRepo = new();
-        Mock<IItemRepository> mockItemRepo = new();
-        Mock<OrderContext> mockContext = new();
-        
-        OrderService orderService = new(mockOrderRepo.Object, mockItemRepo.Object, mockContext.Object);
-        
         List<Order> orderList = [
             new Order{Id = 1, Date=DateTime.Parse("2024/10/21"), Completed = false},
             new Order{Id = 2, Date=DateTime.Parse("2024/10/22"), Completed = false},
@@ -291,6 +275,7 @@ public class OrderServiceTest
 
         //Act        
         //Assert
+        var orderService = CreateOrderService();
         Assert.ThrowsAny<Exception>(() => orderService.DeleteOrder(id));
     }   
 

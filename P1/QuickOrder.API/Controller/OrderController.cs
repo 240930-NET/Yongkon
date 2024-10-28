@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using QuickOrder.API.Model;
 using QuickOrder.API.Service;
+using QuickOrder.API.DTO;
 
 namespace QuickOrder.API.Controller;
 
@@ -24,29 +25,57 @@ public class OrderController : ControllerBase
     [HttpGet("/order")]
     public IActionResult GetAllOrders()
     {
-        var orders = _orderService.GetAllOrders();
-        return Ok(orders);
+        try
+        {
+            var orders = _orderService.GetAllOrders();
+            return Ok(orders);
+        } 
+        catch(Exception e) {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpGet("/order/{id}")]
     public IActionResult GetOrderById(int id)
     {
-        var order = _orderService.GetOrderById(id);
-        return Ok(order);
+        try {
+            var order = _orderService.GetOrderById(id);
+            return Ok(order);
+        } catch(Exception e) {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpGet("/orderWithItems/{orderId}")]
     public IActionResult GetAnOrderWithItems(int orderId)
-    {
-        var orderItems = _orderService.GetAnOrderWithItems(orderId);
-        return Ok(orderItems);
+    {  
+        try {      
+            var orderItems = _orderService.GetAnOrderWithItems(orderId);
+            if (orderItems != null) {
+                var orderWithItems = new OrderWithItemDTO
+                {
+                    OrderId = orderId,
+                    OrderItems = _imapper.Map<IEnumerable<OrderItemDTO>>(orderItems)
+                };
+                return Ok(orderWithItems);
+            } else {
+                return BadRequest("Not order found");
+            }
+        } catch (Exception e) {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpGet("/order/item/{orderId}/{itemId}")]
     public IActionResult GetOrderItemById(int orderId, int itemId)
     {
-        var orderItem = _orderService.GetOrderItemById(orderId, itemId);
-        return Ok(orderItem);
+        try {
+            var orderItem = _orderService.GetOrderItemById(orderId, itemId);
+            var orderItemDTO = _imapper.Map<OrderItemDTO>(orderItem);
+            return Ok(orderItemDTO);
+        } catch (Exception e) {
+            return BadRequest(e.Message);
+        }
     }
   
     // Order Create
@@ -68,7 +97,7 @@ public class OrderController : ControllerBase
         var order = _imapper.Map<Order>(updateOrderDTO);
         try{
             _orderService.UpdateOrder(order);
-            return Ok(order);
+            return Ok(updateOrderDTO);
         }
         catch(Exception e){
             return BadRequest("Could not update order. " + e.Message);
@@ -91,11 +120,12 @@ public class OrderController : ControllerBase
 
     // Item Add to Order
     [HttpPost("/order/item/addNewItem")]
-    public IActionResult AddItemToOrder([FromBody] OrderItem orderItem){
+    public IActionResult AddItemToOrder([FromBody] OrderItemDTO orderItemDTO){
 
+        var orderItem = _imapper.Map<OrderItem>(orderItemDTO);
         try{
             _orderService.AddItemToOrder(orderItem);
-            return Ok(orderItem);
+            return Ok(orderItemDTO);
         }
         catch(Exception e){
             return BadRequest(e.Message);
@@ -103,10 +133,12 @@ public class OrderController : ControllerBase
     }
 
     [HttpPut("/order/item/updateItem")]
-    public IActionResult UpdateItemAtOrder([FromBody] OrderItem orderItem){
+    public IActionResult UpdateItemAtOrder([FromBody] OrderItemDTO orderItemDTO){
+
+        var orderItem = _imapper.Map<OrderItem>(orderItemDTO);
         try{
             _orderService.UpdateItemAtOrder(orderItem);
-            return Ok(orderItem);
+            return Ok(orderItemDTO);
         }
         catch(Exception e){
             return BadRequest("Could not update item at order. " + e.Message);

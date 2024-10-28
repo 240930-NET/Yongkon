@@ -22,7 +22,7 @@ public class OrderService : IOrderService
     {
         IEnumerable<Order> orders = _orderRepository.GetAllOrders();
         if (orders.Count() == 0) {
-            throw new Exception("No Items were found");
+            throw new Exception("No Orders were found");
         } else {
             return orders;
         }             

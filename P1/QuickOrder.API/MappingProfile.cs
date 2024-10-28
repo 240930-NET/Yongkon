@@ -8,11 +8,25 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<Item, ItemDTO>().ReverseMap();;
-        CreateMap<Item, UpdateItemDTO>().ReverseMap();;
-        CreateMap<Order, OrderDTO>().ReverseMap();;
-        CreateMap<Order, UpdateOrderDTO>().ReverseMap();;
-        CreateMap<OrderItem, OrderItemDTO>().ReverseMap();;
+        // Item
+        CreateMap<Item, ItemDTO>().ReverseMap();
+        CreateMap<Item, UpdateItemDTO>().ReverseMap();
+
+        // Order
+        CreateMap<Order, OrderDTO>().ReverseMap();
+        CreateMap<Order, UpdateOrderDTO>().ReverseMap();
+
+        // Order Items
+        CreateMap<OrderItem, OrderItemDTO>().ReverseMap();
+        
+
+        CreateMap<IEnumerable<OrderItem>, OrderWithItemDTO>()
+            .ForMember(dest => dest.OrderItems, opt => opt.MapFrom(src => src.Select(oi => new OrderItemDTO
+            {
+                OrderId = oi.OrderId,
+                ItemId = oi.ItemId,
+                Quantity = oi.Quantity
+            })));        
     }
 
 }

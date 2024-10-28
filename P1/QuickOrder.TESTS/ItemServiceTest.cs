@@ -1,22 +1,45 @@
-using Microsoft.AspNetCore.Authorization.Infrastructure;
-using Microsoft.VisualStudio.TestPlatform.Common.Utilities;
+using AutoMapper;
 using Moq;
+using QuickOrder.API;
+using QuickOrder.API.DTO;
 using QuickOrder.API.Model;
 using QuickOrder.API.Repository;
 using QuickOrder.API.Service;
-
+using Xunit.Abstractions; 
 
 namespace QuickOrder.TESTS;
 
 public class ItemServiceTest
 {
+
+
+    private readonly Mock<IItemRepository> mockRepo = new();
+    private readonly IMapper _imapper;
+
+    private ItemService CreateitemService() {
+        return new ItemService(mockRepo.Object, _imapper);
+    }
+
+
+    private readonly ITestOutputHelper _output; 
+
+    public ItemServiceTest(ITestOutputHelper output)
+    {
+        _output = output;
+
+        // AutoMapper Configuration
+        var config = new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile<MappingProfile>(); // Add API Project's NappingProfile
+        });
+        
+        _imapper = config.CreateMapper(); // IMapper 인스턴스 생성
+    }
+
     [Fact]
     public void GetAllItemsReturnList()
     {
         //Arrange
-        Mock<IItemRepository> mockRepo = new();
-        ItemService itemService = new(mockRepo.Object);
-        
         List<Item> itemList = [
             new Item{Id = 1, Name = "Water", Price = 2.5},
             new Item{Id = 2, Name = "Snack", Price = 1.5},
@@ -26,6 +49,7 @@ public class ItemServiceTest
         mockRepo.Setup(repo => repo.GetAllItems()).Returns(itemList);
 
         //Act
+        var itemService = CreateitemService();
         var returnedList = itemService.GetAllItems();
 
         //Assert
@@ -39,15 +63,13 @@ public class ItemServiceTest
     public void GetAllItemsThrowExceptionsEmpty()
     {
         //Arrange
-        Mock<IItemRepository> mockRepo = new();
-        ItemService itemService = new(mockRepo.Object);
-        
         List<Item> itemList = [];
 
         mockRepo.Setup(repo => repo.GetAllItems()).Returns(itemList);
 
         //Act        
         //Assert
+        var itemService = CreateitemService();
         Assert.ThrowsAny<Exception>(() => itemService.GetAllItems());
     }    
 
@@ -58,9 +80,6 @@ public class ItemServiceTest
     public void GetItemsByIdReturnsProperUser(int id)
     {
         //Arrange
-        Mock<IItemRepository> mockRepo = new();
-        ItemService itemService = new(mockRepo.Object);
-        
         List<Item> itemList = [
             new Item{Id = 1, Name = "Water", Price = 2.5},
             new Item{Id = 2, Name = "Snack", Price = 1.5},
@@ -71,6 +90,7 @@ public class ItemServiceTest
               .Returns(itemList.FirstOrDefault(item => item.Id == id));
 
         //Act
+        var itemService = CreateitemService();
         var item = itemService.GetItemById(id);
 
         //Assert
@@ -84,9 +104,6 @@ public class ItemServiceTest
     public void AddNewItemToItemList()
     {
         //Arrange
-        Mock<IItemRepository> mockRepo = new();
-        ItemService itemService = new(mockRepo.Object);
-        
         List<Item> itemList = [
             new Item{Id = 1, Name = "Water", Price = 2.5},
             new Item{Id = 2, Name = "Snack", Price = 1.5},
@@ -95,13 +112,17 @@ public class ItemServiceTest
 
  
         Item newItem = new(){Id = 4, Name = "Chicken", Price = 4.99};
+        var newItemDTO = _imapper.Map<ItemDTO>(newItem);
 
         mockRepo.Setup(repo => repo.AddItem(It.IsAny<Item>()))
-           .Callback(() => itemList.Add(newItem));
-           
-        //Act        
-        var result = itemService.AddItem(newItem);
+           .Callback<Item>(item => itemList.Add(item));
+        
+        //Act
+        var itemService = CreateitemService();
+        //_output.WriteLine($"\n\n*****  New Item DTO: Name = {newItemDTO.Name}, Price = {newItemDTO.Price}");
 
+        var result = itemService.AddItem(newItemDTO);
+        
         //Assert
         Assert.NotNull(result);
         Assert.Contains(itemList, i => i.Name.Equals("Chicken"));
@@ -112,9 +133,6 @@ public class ItemServiceTest
     public void EditItemFromItemList()
     {
         //Arrange
-        Mock<IItemRepository> mockRepo = new();
-        ItemService itemService = new(mockRepo.Object);
-        
         List<Item> itemList = [
             new Item{Id = 1, Name = "Water", Price = 2.49},
             new Item{Id = 2, Name = "Snack", Price = 1.49},
@@ -129,7 +147,9 @@ public class ItemServiceTest
            .Returns((int id) => itemList.FirstOrDefault(i => i.Id == id));
 
         //Act        
-        var result = itemService.UpdateItem(updateItem);
+        var updateItemDTO = _imapper.Map<UpdateItemDTO>(updateItem);
+        var itemService = CreateitemService();
+        var result = itemService.UpdateItem(updateItemDTO);
 
         //Assert
         Assert.NotNull(result);
@@ -140,9 +160,6 @@ public class ItemServiceTest
     public void RemoveItemFromItemList()
     {
         //Arrange
-        Mock<IItemRepository> mockRepo = new();
-        ItemService itemService = new(mockRepo.Object);
-        
         List<Item> itemList = [
             new Item{Id = 1, Name = "Water", Price = 2.49},
             new Item{Id = 2, Name = "Snack", Price = 1.49},
@@ -168,6 +185,7 @@ public class ItemServiceTest
             });
 
         //Act        
+        var itemService = CreateitemService();
         var result = itemService.DeleteItem(id);
 
         //Assert

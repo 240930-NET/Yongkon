@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace QuickOrder.API.Model;
+namespace QuickOrder.API.DTO;
 
 public class OrderDTO
 {

@@ -28,11 +28,18 @@ public class OrderRepository : IOrderRepository
 
     public IEnumerable<OrderItem> GetAnOrderWithItems(int orderId)
     {
-        return _orderContext.OrderItems
-          .Where(oi => oi.OrderId == orderId)
-          .Include(oi => oi.Order)
-          .Include(oi => oi.Item) 
-          .ToList();
+
+        var orderExist = _orderContext.Orders.FirstOrDefault(o => o.Id == orderId);
+
+        if (orderExist != null) {
+            return _orderContext.OrderItems
+            .Where(oi => oi.OrderId == orderId)
+            .Include(oi => oi.Order)
+            .Include(oi => oi.Item) 
+            .ToList();
+        } else {
+            throw new Exception("Order not found");
+        }
     }
 
     public OrderItem GetOrderItemById(int orderId, int itemId)
